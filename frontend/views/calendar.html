@@ -1,0 +1,52 @@
+<!-- <div ui-calendar="calendarConfig" class="span8 calendar" ng-model="eventSources"></div> -->
+<!-- <div ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div> -->
+<!-- <div ui-calendar ng-model="eventSources"></div> -->
+
+
+<!-- <div id="calendar" ui-calendar="calendarConfig" ng-model="eventSources"></div> -->
+<div>
+  <!-- <div ng-repeat="(id, event) in calEventsSync">{{id}} ------ {{event}}</div> -->
+  <!-- <div>{{eventSources}}</div> -->
+
+
+  <form ng-submit="addEvent()" class="form-group">
+    <div class="input-group col-md-2">
+    	<input class="form-control" ng-model="eventTitle" placeholder="Event name">
+    	<input class="form-control" ng-model="eventUrl" placeholder="Event url">
+    </div>
+		
+		<!-- start date -->
+  	<div class="row">
+        <div class="col-md-2">
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="eventStartDate" is-open="openedStart" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- end date -->
+    <div class="row">
+        <div class="col-md-2">
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="eventEndDate" is-open="openedEnd" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+    </div>
+
+<!--     <button type="button" class="btn btn-sm btn-info" ng-click="today()">Today</button>
+    <button type="button" class="btn btn-sm btn-default" ng-click="dt = '2009-08-24'">2009-08-24</button>
+    <button type="button" class="btn btn-sm btn-danger" ng-click="clear()">Clear</button>
+    <button type="button" class="btn btn-sm btn-default" ng-click="toggleMin()" tooltip="After today restriction">Min date</button> -->
+
+  	<input class="input-group" type="submit" value="Add event">
+  </form>
+  
+  <div class="calendar-style" ui-calendar="uiConfig.fullCalendar" ng-model="eventSources"></div>
+  
+</div>

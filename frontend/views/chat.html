@@ -1,0 +1,25 @@
+
+<div class="col-md-6">
+	<!-- <p ng-hide="messages">There are no messages. Create one.</p> -->
+	<div class="table-responsive"> <!-- ng-show="messages" -->
+		<table class="table table-striped">
+			<tr ng-repeat="message in messages">
+				<td class="col-md-2 active">{{message.user}}</td>
+				<td class="col-md-7 success">{{message.text}}</td>
+				<td class="col-md-3 warning">{{message.timestamp | date:'M/d/yy h:mm a'}}</td>
+			</tr>
+		</table>
+	</div>
+
+	<form class="form-horizontal col-md-12" role="form" ng-submit="addMessage()">
+		<div class="form-group">
+			<!-- <label class="col-sm-2 control-label" for="newMessage">Message</label> -->
+			<div class="input-group">
+				<input type="text" placeholder="New message..." ng-model="newMessage" id="newMessage" class="form-control">
+				<span class="input-group-btn">
+					<input type="submit" class="btn btn-success" value="Send">
+				</span>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="page-header" ng-init="{ 
+  isDisabled:           false, 
+  isCameraOn:           false, 
+  showVideo:            false, 
+  isInviteOn:           false}">
+      <!-- <h1>Videoresume home</h1> -->
+      <h1>Home</h1>
+  </div>
+
+  <div class="row">
+      <ul class="nav nav-tabs">
+          <li ui-sref-active="active"><a ui-sref="videoresumehome.video">Video</a></li>
+          <li ui-sref-active="active"><a ui-sref="videoresumehome.calendar">Calendar</a></li>
+          <li ui-sref-active="active"><a ui-sref="videoresumehome.screenshare">Screen share</a></li>
+          <li ui-sref-active="active"><a ui-sref="videoresumehome.docshare">Share documents</a></li>
+          <li ui-sref-active="active"><a ui-sref="videoresumehome.textchat">Text chat</a></li>
+          <li ui-sref-active="active"><a ui-sref="videoresumehome.history">History</a></li>
+      </ul>
+  </div>
+
+  <div class="row view-container">
+      <ui-view class="views-transition"></ui-view>
+  </div>
+
+<!-- assets.json add      "public/system/lib/socket.io-client/socket.io.js", -->
+  <!-- // <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script> -->
+   <!-- <script src="/socket.io/socket.io.js"></script> -->
+
+</div>

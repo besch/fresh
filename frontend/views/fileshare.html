@@ -1,0 +1,62 @@
+<div class="col-sm-4">
+   {{auth.profile.nickname}}
+  <!-- <ul class="list-unstyled"> -->
+    <!-- <li ng-repeat="file in files" class="well well-sm col-sm-3"> -->
+      <!-- <img ng-if="isImage" ng-src="{{file}}" style="height: 30px;"> -->
+      <!-- <div class="well well-sm">{{file | atob}}</div> -->
+<!--         <p>User: {{file.user}}</p>
+        <p>Name: {{file.name}}</p>
+        <p>Size: {{file.size}}</p>
+        <p>Uploaded: {{file.timestamp | date: 'short'}}</p>
+        <p>Type: {{file.type}}</p>
+    </li> -->
+    <!-- {{files}} -->
+    <table class="table table-striped" ng-repeat="file in files">
+      <tr>
+        <td class="col-sm-1 active">User:</td>
+        <td class="col-sm-2 active">{{file.user}}</td>
+      </tr>
+      <tr>
+        <td class="col-sm-1 active">Name:</td>
+        <td class="col-md-2 success">{{file.name}}</td>
+      </tr>
+      <tr>
+        <td class="col-sm-1 active">Size:</td>
+        <td class="col-md-2 active">{{file.size | fileSize}} KB</td>
+      </tr>
+      <tr>
+        <td class="col-sm-1 active">Uploaded:</td>
+        <td class="col-md-2 active">{{file.timestamp | date: 'short'}}</td>
+      </tr>
+      <tr>
+        <td class="col-sm-1 active">Type:</td>
+        <td class="col-md-2 active">{{file.type}}</td>
+      </tr>
+      <tr>
+        <td class="col-sm-1 danger"><a ng-click="removeFile(file.$id)">Remove</a></td>
+        <td class="col-md-2 success"><a href="{{file.file}}" target="_blank">View/Download</a></td>
+      </tr>
+    </table>
+<!--     <li ng-repeat="file in files">
+      <img ng-if="isImage" ng-src="{{file}}" style="height: 30px;">
+      <div class="well well-sm col-sm-3">
+        <p>User: {{file.user}}</p>
+        <p>Name: {{file.name}}</p>
+        <p>Size: {{file.size}}</p>
+        <p>Uploaded: {{file.timestamp | date: 'short'}}</p>
+        <p>Type: {{file.type}}</p>
+      </div>
+    </li> -->
+  <!-- </ul> -->
+</div>
+
+<form class="form-horizontal col-md-12" role="form" ng-submit="addFile(file)">
+  <div class="form-group">
+    <div class="input-group col-md-3">
+      <input ng-model="file" type="file" fileread class="form-control">
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span> Share</button>
+      </span>
+    </div>
+  </div>
+</form>

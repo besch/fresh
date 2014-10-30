@@ -1,0 +1,24 @@
+<div id="links">
+  <input type="button" value="Connect" id ="connectLink" ng-click="connect()" />
+  <input type="button" value="Disconnect" id ="disconnectLink" ng-click="disconnect()" />
+  <input type="button" value="Publish" id ="publishLink" ng-click="startPublishing()" />
+  <input type="button" value="Unpublish" id ="unpublishLink" ng-click="stopPublishing()" />
+</div>
+
+<!-- <div id="myCamera" class="publisherContainer"></div> -->
+
+<div class="publisherContainer">
+  <h4>Live broadcasting</h4>
+  <div id="videoBroadcastPublisher"></div>
+</div>
+
+<div class="subscriberContainer">
+  <h4>Subscribers</h4>
+  <div id="videoBroadcastSubscribers"></div>
+</div>
+
+
+<div>
+  <h4>ng-repeat subscribers</h4>
+  <div ng-repeat="subscriber in subscribers">{{subscriber}}</div>
+</div>

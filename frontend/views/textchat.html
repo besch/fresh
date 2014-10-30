@@ -1,0 +1,53 @@
+<!-- <div class="col">
+	<h3>Messages</h3>
+	<p ng-repeat="message in messages">{{message.user}}: {{message.text}}</p>
+</div>
+
+<div class="col">
+	<h3>Users</h3>
+	<p ng-repeat="user in users">{{user}}</p>
+</div>
+
+<div class="crl">
+	<form ng-submit="sendMessage">
+		Message
+		<input size="60" ng-model="message" />
+		<input type="button" value="Send" />
+	</form>
+</div> -->
+
+<!-- <div class="crl">
+	<h3>Change name</h3>
+	<p>Your name is {{name}}</p>
+	<form ng-submit="changeName()">
+		<input ng-model="newName" />
+		<input type="submit" value="Change name" />
+	</form>
+</div> -->
+
+
+<div ng-controller="textChatCtrl">
+    <p>
+        Sort by: 
+        <select ng-model="orderBy">
+            <option value="">--default--</option>
+            <option>user</option>
+            <option>timestamp</option>
+            <option>text</option>
+        </select>
+    </p>
+    <p>Search: <input ng-model="searchText" /></p>
+    <ul class="chatbox">
+        <!-- arrays are fully sortable and filterable in directives -->
+        <li ng-repeat="message in messages | orderBy:orderBy | filter:searchText">
+            {{message.user}}: {{message.text}}
+            
+            <!-- delete a message using the $remove method -->
+            <a href="#" ng-click="messages.$remove(message)">X</a>
+        </li>
+    </ul>
+    <form ng-submit="addMessage(message)">
+        <input type="text" ng-model="message"/>
+        <input type="submit" value="Send Message"/>
+    </form>
+</div>

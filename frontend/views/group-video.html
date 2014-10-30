@@ -1,0 +1,65 @@
+
+  <div class="container bump-me">
+
+    <div class="body-content">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Create you video resume</h3>
+        </div>
+        <div class="panel-body">
+          <div id="subscribers"><div id="publisher"></div></div>
+        </div>
+        <div class="panel-footer" ng-init="{ isDisabled: false, isCameraOn: false, showVideo: false, isAvailable: false}">
+          <a ng-click="startSession()" ng-hide="isCameraOn" class="btn btn-success">Turn on camera</a>
+          <a ng-click="startRecording()" ng-show="isCameraOn" ng-disabled="isDisabled" class="btn btn-success">Start archiving</a>
+          <a ng-click="stopRecording()" ng-show="isCameraOn" ng-disabled="!isDisabled" class="btn btn-danger">Stop archiving</a>
+          <a ng-click="invitePerson()" ng-show="isCameraOn" class="btn btn-primary">Invite</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Past Recordings</h3>
+      </div>
+      <div class="panel-body">
+        <p ng-hide="archives">There are no archives currently available. Try to create one.</p>
+        <table class="table" ng-show="archives">
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>View</th>
+              <th>Status</th>
+              <th>Duration</th>
+              <th>Created at</th>
+              <th>Download</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="archive in archives">
+            <tr>
+              <td>{{$index + 1}}</td>
+              <td>{{archive.status}}</td>
+              <td>
+                <!-- <button ng-hide="isAvailable" ng-disabled="!isAvailable" class="btn btn-danger">Not available</button> -->
+                <!-- <div ng-show="isAvailable"> -->
+                  <button ng-click="showVideo = !showVideo" ng-hide="showVideo" class="btn btn-success">Show video</button>
+                  <video ng-show="showVideo" width="320" height="240" controls>
+                    <source src="{{archive.url | splitUrl}}" type="video/mp4">
+                  </video>
+                  <div class="displayBlock">
+                    <button ng-click="showVideo = !showVideo" ng-show="showVideo" class="btn btn-primary">Hide video</button>
+                  </div>
+                <!-- </div> -->
+              </td>
+              <td>{{archive.duration}} seconds</td>
+              <td>{{archive.createdAt | date:'shortDate'}}</td>
+              <td><a href="{{archive.url}}" target="_self" class="btn btn-primary">Download</a></td>
+              <td><button ng-click="deleteArchive(archive.id)" class="btn btn-danger">Delete</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
