@@ -7,6 +7,10 @@
 
 <!-- <div id="myCamera" class="publisherContainer"></div> -->
 
+<div ng-repeat="session in sessions">
+  <div style="width:240px;height:20px;border:1px solid red;">{{session._id}}</div>
+</div>
+
 <div class="publisherContainer">
   <h4>Live broadcasting</h4>
   <div id="videoBroadcastPublisher"></div>

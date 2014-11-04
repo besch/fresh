@@ -7,6 +7,12 @@
 
 <!-- <div id="myCamera" class="publisherContainer"></div> -->
 
+<form ng-submit="createBroadcasting()">
+  <input ng-model="broadcasting.name" placeholder="Name">
+  <input ng-model="broadcasting.description" placeholder="Description">
+  <input type="submit" class="btn btn-success" value="Create broadcasting">
+</form>
+
 <div class="publisherContainer">
   <h4>Live broadcasting</h4>
   <div id="videoBroadcastPublisher"></div>
@@ -15,10 +21,4 @@
 <div class="subscriberContainer">
   <h4>Subscribers</h4>
   <div id="videoBroadcastSubscribers"></div>
-</div>
-
-
-<div>
-  <h4>ng-repeat subscribers</h4>
-  <div ng-repeat="subscriber in subscribers">{{subscriber}}</div>
 </div>

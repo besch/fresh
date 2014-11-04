@@ -64,7 +64,7 @@ angular.module('Webresume')
       url: '/video-broadcast-create',
       templateUrl: 'views/videoBroadcastPublisher.html',
       controller: 'VideoBroadcastPublisherCtrl',
-      // data: {requiresLogin: true}
+      data: {requiresLogin: true}
     })
 
     .state('video-broadcast-join', {

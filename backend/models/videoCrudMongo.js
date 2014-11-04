@@ -1,17 +1,10 @@
 var mongoose = require('mongoose');
 var MongoGrid = mongoose.mongo.Grid;
 var ObjectID = mongoose.mongo.BSONPure.ObjectID;
-var config = require('../config');
-var mongodbURL = config.mongo.domain;
-var mongodbOptions = config.mongo.options;;
-
-mongoose.connect(mongodbURL, mongodbOptions, function (err, db) {
-  console.log('Connection successful to: ' + mongodbURL);
-});
 
 // VIDEO MODEL 
 var VideoResume = new mongoose.Schema({
-  user:    { type: String, require: true },
+  user:         { type: String, require: true },
   title:        { type: String, require: true },
   description:  { type: String, require: true },
   created:      { type: Date,   default: Date.now },
@@ -88,6 +81,7 @@ mongoose.connection.on('connected', function() {
   exports.listVResume = function () {
     videoModel.find({}, function (err, result) {
       if(err) console.log(err);
+      return result;
     });
   };
 

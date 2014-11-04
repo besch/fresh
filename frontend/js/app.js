@@ -13,12 +13,12 @@ angular.module('Webresume', [
   $provide.factory('TokenInterceptor', function() {
     return {
       request: function (config) {
-        // console.log(config);
+        console.log(config);
         return config;
       },
 
       response: function (config) {
-        // console.log(config);
+        console.log(config);
         return config;
       },
 

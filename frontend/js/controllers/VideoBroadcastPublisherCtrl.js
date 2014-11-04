@@ -2,14 +2,17 @@
 
 angular.module('Webresume')
 
-.controller('VideoBroadcastPublisherCtrl', ['$scope', '$http', 'TB', function ($scope, $http, TB) {
+.controller('VideoBroadcastPublisherCtrl', ['$scope', '$rootScope', '$http', 'TB', function ($scope, $rootScope, $http, TB) {
 
   var apiKey,
       sessionId,
       token,
       session,
       publisher,
-      subscribers = {};
+      subscribers = {},
+      publisherDivId = 'videoBroadcastPublisher',
+      subscriberDivId = 'videoBroadcastSubscribers',
+      defaultBackgroundImageURI = 'http://tokbox.com/img/styleguide/tb-colors-cream.png';
 
   $scope.subscribers = {};
 
@@ -30,23 +33,31 @@ angular.module('Webresume')
     height:198
   };
 
-  $http.get('/broadcasting/create').then(function(res) {
-    apiKey = res.data.apiKey;
-    sessionId = res.data.sessionId;
-    token = res.data.token;
+  $scope.createBroadcasting = function () {
+    $http.post('/broadcasting/create', { params: {
+      email: $rootScope.auth.profile.email,
+      name: $scope.broadcasting.name,
+      description: $scope.broadcasting.description
+    }}).then(function(res) {
+      apiKey = res.data.apiKey;
+      sessionId = res.data.sessionId;
+      token = res.data.token;
 
-    session = TB.initSession(apiKey, sessionId);
+      session = TB.initSession(apiKey, sessionId);
+      attachSessionEvents(session);
 
+      publisher = TB.initPublisher(publisherDivId, publisherOptions);
+    });
+  };
+
+  function attachSessionEvents(session) {
     session.on('sessionConnected', sessionConnectedHandler);
     // session.on('sessionDisconnected', sessionDisconnectedHandler);
     session.on('connectionCreated', connectionCreatedHandler);
     // session.on('connectionDestroyed', connectionDestroyedHandler);
     session.on('streamCreated', streamCreatedHandler);
     // session.on('streamDestroyed', streamDestroyedHandler);
-
-    publisher = TB.initPublisher('videoBroadcastPublisher', publisherOptions);
-  });
-
+  }
 
   $scope.connect = function () {
     session.connect(token, function(err, info) {
@@ -67,7 +78,7 @@ angular.module('Webresume')
       publisher = session.publish(publisher, function (err, result) {
         if(err) console.log(err);
         // console.log(result);
-        
+
         // SEND PUBLISHER STREAM ID TO BACKEND
         $http.post('/broadcasting/post-publisher-streamid', { params: { publisherStream: result.stream.id }});
       });

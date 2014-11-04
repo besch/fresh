@@ -6,7 +6,9 @@ var express      = require('express'),
   morgan         = require('morgan'),
   http           = require('http'),
   path           = require('path'),
-  routesVideoResume         = require('./routes/videoResume');
+  mongoose       = require('mongoose'),
+  config         = require('./config'),
+  routesVideoResume         = require('./routes/videoResume'),
   routesVideoBroadcasting   = require('./routes/videoBroadcasting');
 
 var app = express();
@@ -35,6 +37,12 @@ if (env === 'development') {
 if (env === 'production') {
   // TODO
 }
+
+
+mongoose.connect(config.mongo.domain, config.mongo.options, function (err, db) {
+  console.log('Connection successful to: ' + mongodbURL);
+});
+
 
 
 /**

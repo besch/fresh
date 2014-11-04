@@ -9,9 +9,16 @@ angular.module('Webresume')
       subscribers = {},
       publisherDivId = 'videoBroadcastPublisher',
       subscriberDivId = 'videoBroadcastSubscribers',
-      defaultBackgroundImageURI = '';
+      defaultBackgroundImageURI = 'http://tokbox.com/img/styleguide/tb-colors-cream.png';
+
+  $scope.listAllSessions = function () {
+    $http.get('/broadcasting/list-all-sessions').then(function (res) {
+      $scope.sessions = res.data;
+    });
+  };
 
   $scope.publisherStream = null;
+  $scope.sessions = $scope.listAllSessions();
 
   var publisherOptions = {
     publishAudio: true,
@@ -34,7 +41,8 @@ angular.module('Webresume')
     height: 90
   };
 
-  $http.get('/broadcasting/join').then(function(res) {
+  
+  $http.get('/broadcasting/join').then(function (res) {
     $scope.apiKey = res.data.apiKey,
     $scope.sessionId = res.data.sessionId,
     $scope.token = res.data.token,
@@ -110,9 +118,21 @@ angular.module('Webresume')
   }
 
   function addSubscriberToSubscribersDiv (stream) {
+
+    var subscriberDivControls = document.createElement('ul');
+    subscriberDivControls.setAttribute('class', 'subscriberDivControls');
+    var callButton = document.createElement('li');
+    callButton.setAttribute('class', 'glyphicon glyphicon-earphone');
+    subscriberDivControls.appendChild(callButton);
+
+
+
     var subscriberDiv = document.createElement('div'); // Create a div for the subscriber to replace
     subscriberDiv.setAttribute('id', stream.streamId); // Give the replacement div the id of the stream as its id.
     subscriberDiv.setAttribute('class', 'subscriberDiv');
+    ///////////////////////////////////////////////////////
+    subscriberDiv.appendChild(subscriberDivControls);
+    ///////////////////////////////////////////////////////
     document.getElementById(subscriberDivId).appendChild(subscriberDiv);
     var subscriber = subscribers[stream.streamId] = session.subscribe(stream, subscriberDiv.id, subscriberOptions, function (error) {
       if(error) return console.log(error.message);
@@ -127,7 +147,7 @@ angular.module('Webresume')
       var imgData = subscriber.getImgData();
       subscriber.setStyle('backgroundImageURI', imgData);
     } else {
-      subscriber.setStyle('backgroundImageURI', 'http://tokbox.com/img/styleguide/tb-colors-cream.png');
+      subscriber.setStyle('backgroundImageURI', defaultBackgroundImageURI);
     }
   }
 
