@@ -58,11 +58,11 @@ module.exports = function(app) {
     });
   });
 
-  // PUBLISHER PUBLISHED OWN STREAM, GET THE STREAM ID AND SEND TO 'join' ROUTE, SO OTHERS COULD CONNECT TO PUBLISHER STREAM IF EXISTS
-  app.post('/broadcasting/post-publisher-streamid', function (req, res) {
-    app.set('publisherStream', req.body.params.publisherStream);
-    res.send(200);
-  });
+  // // PUBLISHER PUBLISHED OWN STREAM, GET THE STREAM ID AND SEND TO 'join' ROUTE, SO OTHERS COULD CONNECT TO PUBLISHER STREAM IF EXISTS
+  // app.post('/broadcasting/post-publisher-streamid', function (req, res) {
+  //   app.set('publisherStream', req.body.params.publisherStream);
+  //   res.send(200);
+  // });
 
   app.get('/broadcasting/join', function (req, res) {
     // if(apiKey && sessionId && token && app.get('publisherStream')) {

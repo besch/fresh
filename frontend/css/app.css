@@ -88,3 +88,37 @@ fieldset {
   width: 25%;
   vertical-align: top;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.connection-controls {
+  display: block;
+  width: 60px;
+  height: 20px;
+  color: #fff;
+}

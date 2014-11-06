@@ -17,7 +17,7 @@ angular.module('Webresume')
   $scope.subscribers = {};
 
   var publisherOptions = {
-    publishAudio: true,
+    publishAudio: false,
     publishVideo: true,
     width: 640,
     height: 360,
@@ -28,13 +28,25 @@ angular.module('Webresume')
 
   var subscriberOptions = {
     publishAudio: false,
-    publishVideo: false,
+    publishVideo: true,
     width: 264,
     height:198
   };
 
+  function connectToSession (session, token) {
+    session.connect(token, function(err, info) {
+      if(err) console.log(err);
+      console.log(info);
+
+      session.publish(publisher, function (err, result) {
+        if(err) console.log(err);
+        // console.log(result.stream.id);
+      });
+    });
+  };
+
   $scope.createBroadcasting = function () {
-    $http.post('/broadcasting/create', { params: {
+    $http.post('/conference/create', { params: {
       email: $rootScope.auth.profile.email,
       name: $scope.broadcasting.name,
       description: $scope.broadcasting.description
@@ -44,52 +56,19 @@ angular.module('Webresume')
       token = res.data.token;
 
       session = TB.initSession(apiKey, sessionId);
-      attachSessionEvents(session);
-
       publisher = TB.initPublisher(publisherDivId, publisherOptions);
+      connectToSession(session, token);
+
+      session.on('sessionConnected', sessionConnectedHandler);
+      session.on('sessionDisconnected', sessionDisconnectedHandler);
+      session.on('connectionCreated', connectionCreatedHandler);
+      session.on('connectionDestroyed', connectionDestroyedHandler);
+      session.on('streamCreated', streamCreatedHandler);
+      session.on('streamDestroyed', streamDestroyedHandler);
     });
   };
 
-  function attachSessionEvents(session) {
-    session.on('sessionConnected', sessionConnectedHandler);
-    // session.on('sessionDisconnected', sessionDisconnectedHandler);
-    session.on('connectionCreated', connectionCreatedHandler);
-    // session.on('connectionDestroyed', connectionDestroyedHandler);
-    session.on('streamCreated', streamCreatedHandler);
-    // session.on('streamDestroyed', streamDestroyedHandler);
-  }
-
-  $scope.connect = function () {
-    session.connect(token, function(err, info) {
-      if(err) console.log(err);
-      // console.log(info);
-
-      $scope.startPublishing();
-    });
-  };
-
-  // $scope.disconnect = function () {
-  //   session.disconnect();
-  //   console.log('session disconnected');
-  // };
-
-  $scope.startPublishing = function () {
-    if (publisher) {
-      publisher = session.publish(publisher, function (err, result) {
-        if(err) console.log(err);
-        // console.log(result);
-
-        // SEND PUBLISHER STREAM ID TO BACKEND
-        $http.post('/broadcasting/post-publisher-streamid', { params: { publisherStream: result.stream.id }});
-      });
-
-      // publisherStream.on('streamCreated', function (event) {
-      //   console.log(event.streams);
-      // });
-    }
-  };
-
-  
+ 
 
   // $scope.stopPublishing = function () {
   //   if (publisher) {
@@ -108,9 +87,9 @@ angular.module('Webresume')
     }
   }
 
-  // function sessionDisconnectedHandler(event) {
-  //   publisher = null;
-  // }
+  function sessionDisconnectedHandler(event) {
+    publisher = null;
+  }
 
   function streamCreatedHandler(event) {
     // Subscribe to the newly created streams
@@ -142,6 +121,11 @@ angular.module('Webresume')
     //   class: 'subscriberDiv',
     //   name: 'Some name'
     // };
+  }
+
+  function streamDestroyedHandler(event) {
+    // This signals that a stream was destroyed. Any Subscribers will automatically be removed.
+    // This default behaviour can be prevented using event.preventDefault()
   }
 
   function connectionDestroyedHandler(event) {

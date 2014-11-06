@@ -1,14 +1,21 @@
 <div id="links">
-  <input type="button" value="Connect" id ="connectLink" ng-click="connect()" />
-  <input type="button" value="Disconnect" id ="disconnectLink" ng-click="disconnect()" />
+  <!-- <input type="button" value="Connect to group conference" id ="connectLink" ng-click="connectToSession()" /> -->
+<!--   <input type="button" value="Disconnect" id ="disconnectLink" ng-click="disconnect()" />
   <input type="button" value="Publish" id ="publishLink" ng-click="startPublishing()" />
-  <input type="button" value="Unpublish" id ="unpublishLink" ng-click="stopPublishing()" />
+  <input type="button" value="Unpublish" id ="unpublishLink" ng-click="stopPublishing()" /> -->
 </div>
 
 <!-- <div id="myCamera" class="publisherContainer"></div> -->
 
 <div ng-repeat="session in sessions">
-  <div style="width:240px;height:20px;border:1px solid red;">{{session._id}}</div>
+  <div style="width:40px;height:40px;border:1px solid red; margin: 10px;">
+    <a ng-click="callUserId()" 
+      data-sessionId="{{session.sessionId}}" 
+      data-token="{{session.token}}"
+      data-apiKey="{{session.apiKey}}">
+      room {{$index + 1}}
+    </a>
+  </div>
 </div>
 
 <div class="publisherContainer">

@@ -9,7 +9,7 @@ var express      = require('express'),
   mongoose       = require('mongoose'),
   config         = require('./config'),
   routesVideoResume         = require('./routes/videoResume'),
-  routesVideoBroadcasting   = require('./routes/videoBroadcasting');
+  routesVideoConference   = require('./routes/videoConference');
 
 var app = express();
 
@@ -65,7 +65,7 @@ mongoose.connect(config.mongo.domain, config.mongo.options, function (err, db) {
 
 
 routesVideoResume(app);
-routesVideoBroadcasting(app);
+routesVideoConference(app);
 
 /**
  * Start Server

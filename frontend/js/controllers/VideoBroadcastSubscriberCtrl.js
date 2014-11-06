@@ -5,51 +5,75 @@ angular.module('Webresume')
 .controller('VideoBroadcastSubscriberCtrl', ['$scope', '$http', 'TB', function ($scope, $http, TB) {
 
   var session,
+      publisher,
       publisherMe,
       subscribers = {},
+      myDivId = 'videoBroadcastMe',
       publisherDivId = 'videoBroadcastPublisher',
       subscriberDivId = 'videoBroadcastSubscribers',
       defaultBackgroundImageURI = 'http://tokbox.com/img/styleguide/tb-colors-cream.png';
 
-  $scope.listAllSessions = function () {
-    $http.get('/broadcasting/list-all-sessions').then(function (res) {
-      $scope.sessions = res.data;
-    });
-  };
-
-  $scope.publisherStream = null;
-  $scope.sessions = $scope.listAllSessions();
-
   var publisherOptions = {
-    publishAudio: true,
-    publishVideo: true,
+    publishAudio: false,
+    publishVideo: false,
     width: 640,
     height: 360
   };
 
   var subscriberOptions = {
     publishAudio: false,
-    publishVideo: false,
+    publishVideo: true,
     width: 264,
     height:198
   };
 
   var myOptions = {
     publishAudio: false,
-    publishVideo: false,
+    publishVideo: true,
     width: 130,
     height: 90
   };
 
-  
-  $http.get('/broadcasting/join').then(function (res) {
-    $scope.apiKey = res.data.apiKey,
-    $scope.sessionId = res.data.sessionId,
-    $scope.token = res.data.token,
-    $scope.publisherStream = res.data.publisherStream;
+  $scope.listAllSessions = function () {
+    $http.get('/conference/list-all-sessions').then(function (res) {
+      $scope.sessions = res.data;
+    });
+  };
+  $scope.listAllSessions();
 
-    session = TB.initSession($scope.apiKey, $scope.sessionId);
-    publisherMe = TB.initPublisher('videoBroadcastMe', myOptions);
+
+
+  function initSession (api, sessionId) {
+    return TB.initSession(api, sessionId);
+  };
+
+  function initPublisher (targetDiv) {
+    return TB.initPublisher(targetDiv, myOptions);
+  };
+
+  function connectToSession (session, token) {
+    session.connect(token, function(err, info) {
+      if(err) console.log(err);
+      console.log(info);
+
+      session.publish(publisher, function (err, result) {
+        if(err) console.log(err);
+        // console.log(result.stream.id);
+      });
+    });
+  };
+
+
+  $scope.callUserId = function () {
+
+    var sessionId = this.session.sessionId;
+    var token = this.session.token;
+    var apiKey = this.session.apiKey;
+    console.log(this.session)
+
+    session = initSession(apiKey, sessionId);
+    publisher = TB.initPublisher(myDivId, myOptions);
+    connectToSession(session, token);
 
     session.on('sessionConnected', sessionConnectedHandler);
     session.on('sessionDisconnected', sessionDisconnectedHandler);
@@ -57,15 +81,6 @@ angular.module('Webresume')
     session.on('connectionDestroyed', connectionDestroyedHandler);
     session.on('streamCreated', streamCreatedHandler);
     session.on('streamDestroyed', streamDestroyedHandler);
-  });
-
-
-  $scope.connect = function () {
-    session.connect($scope.token, function(err, info) {
-      if(err) console.log(err);
-      console.log(info);
-      session.publish(publisherMe);
-    });
   };
 
   $scope.disconnect = function () {
@@ -103,15 +118,11 @@ angular.module('Webresume')
   }  
 
   function addStream(stream) {
+    console.log(stream)
     // Check if this is the stream that I am publishing or publisher stream, and if so do not publish.
     if (stream.connection.connectionId == session.connection.connectionId) {
       return;
     }
-
-    if(stream.streamId === $scope.publisherStream) {
-      subscribers[stream.streamId] = session.subscribe(stream, publisherDivId, publisherOptions);
-    }
-
     else {
       addSubscriberToSubscribersDiv(stream);
     }
@@ -119,26 +130,39 @@ angular.module('Webresume')
 
   function addSubscriberToSubscribersDiv (stream) {
 
-    var subscriberDivControls = document.createElement('ul');
-    subscriberDivControls.setAttribute('class', 'subscriberDivControls');
-    var callButton = document.createElement('li');
-    callButton.setAttribute('class', 'glyphicon glyphicon-earphone');
-    subscriberDivControls.appendChild(callButton);
+    if(stream.name === 'Host') {
+      subscribers[stream.streamId] = session.subscribe(stream, publisherDivId, publisherOptions);
+    }
+    else {
+      var subscriberDiv = document.createElement('div'); // Create a div for the subscriber to replace
+      subscriberDiv.setAttribute('id', stream.streamId); // Give the replacement div the id of the stream as its id.
+      subscriberDiv.setAttribute('class', 'subscriberDiv');
+
+      document.getElementById(subscriberDivId).appendChild(subscriberDiv);
+      subscribers[stream.streamId] = session.subscribe(stream, subscriberDiv.id, subscriberOptions, function (error) {
+        if(error) return console.log(error.message);
+
+        setSubscriberBackgroundImg(subscribers[stream.streamId]);
+      });
+    }
+
+    var controlls = document.createElement('span');
+    controlls.setAttribute('class', 'connection-controls');
+    controlls.setAttribute('ng-click', 'callMe()');
+    controlls.innerHTML = 'Call me';
+    subscriberDiv.insertBefore(controlls);
+    // var subscriberDivControls = document.createElement('ul');
+    // subscriberDivControls.setAttribute('class', 'subscriberDivControls');
+    // var callButton = document.createElement('li');
+    // callButton.setAttribute('class', 'glyphicon glyphicon-earphone');
+    // subscriberDivControls.appendChild(callButton);
+    // ///////////////////////////////////////////////////////
+    // subscriberDiv.appendChild(subscriberDivControls);
+    // ///////////////////////////////////////////////////////
 
 
 
-    var subscriberDiv = document.createElement('div'); // Create a div for the subscriber to replace
-    subscriberDiv.setAttribute('id', stream.streamId); // Give the replacement div the id of the stream as its id.
-    subscriberDiv.setAttribute('class', 'subscriberDiv');
-    ///////////////////////////////////////////////////////
-    subscriberDiv.appendChild(subscriberDivControls);
-    ///////////////////////////////////////////////////////
-    document.getElementById(subscriberDivId).appendChild(subscriberDiv);
-    var subscriber = subscribers[stream.streamId] = session.subscribe(stream, subscriberDiv.id, subscriberOptions, function (error) {
-      if(error) return console.log(error.message);
-
-      setSubscriberBackgroundImg(subscriber);
-    });
+    
     // console.log(subscribers);
   }
 
@@ -169,16 +193,6 @@ angular.module('Webresume')
   }
 }])
 
-
-
-
-
-
-
-
-.factory('TB', ['$window', function($window) {
-  return $window.TB;
-}])
 
 .filter('splitUrl', ['$sce', function($sce) {
   return function(input) {
